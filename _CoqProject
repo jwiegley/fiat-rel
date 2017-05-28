@@ -1,0 +1,4 @@
+-R /Users/johnw/oss/fiat/8.6/src Fiat
+-R /Users/johnw/oss/coqrel coqrel
+-I /Users/johnw/oss/fiat/8.6/src/Common/Tactics
+Refine.v

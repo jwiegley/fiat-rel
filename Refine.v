@@ -147,6 +147,10 @@ Next Obligation.
 Qed.
 
 Ltac translate :=
+  try simplify with monad laws;
+  rewrite ?refine_If_Then_Else_ret;
+  try simplify with monad laws; simpl;
+  rewrite ?If_Then_Else_fst, ?If_Then_Else_snd; simpl;
   match goal with
   | [ |- refine (ret _) _ ] => solve [ finish honing ]
   | [ H : Related _ _ _ |- refine { x : _ | ?R ?X x } _ ] =>
@@ -168,22 +172,7 @@ Ltac translate :=
 Theorem impl : FullySharpened spec.
 Proof.
   start sharpening ADT.
-  hone representation using EnsembleAsList_AbsR;
-
-  (* See if our known theories can resolve things for us. *)
-  try simplify with monad laws; try translate.
-
-  {
-    rewrite refine_If_Then_Else_ret;
-    simplify with monad laws; simpl.
-    rewrite If_Then_Else_fst; simpl.
-    translate.
-    rewrite If_Then_Else_snd; simpl.
-    replace (If List.existsb (A_eq_dec d) r_n Then () Else ()) with ()
-      by (destruct (List.existsb _ _); auto).
-    finish honing.
-  }
-
+  hone representation using EnsembleAsList_AbsR; try translate.
   finish_SharpeningADT_WithoutDelegation.
 Defined.
 
